@@ -15,16 +15,17 @@ rawTest.txt: contains T * (D+1) elements where T is the size of testing data, fi
 comfeat_train(#).txt: contains N * (D+1) elements, the input dimension is much smaller compared to raw signal
 comfeat_test(#).txt: contains N * (D+1) elements
 
-Python
-- Install GPy:
-  1.install anaconda
-  2.in command line type:
-    conda update scipy
-    pip install gpy
-    pip install --upgrade GPy
-  3.this folder contains the GPy code for Gaussian process learning hypers and prediction
-  4.type “python GPy-hyper.py directory” to run the program, directory contains the location where data is stored (in Data folder)
-  5.type “python GPy-hyper.py directory sid” to run a particular dataset, sid range from -3 to 3.
+Install GPy:
+- install anaconda
+- in command line type:
+  - conda update scipy
+  - pip install gpy
+  - pip install --upgrade GPy
+  - 
+Python Folder
+- this folder contains the GPy code for Gaussian process learning hypers and prediction
+- type “python GPy-hyper.py directory” to run the program, directory contains the location where data is stored (in Data folder)
+- type “python GPy-hyper.py directory sid” to run a particular dataset, sid range from -3 to 3.
 - prediction results and hypers are stored in the location specified by “directory”
 - prediction results are specified by res[N].txt where N range from -3 to 3. when N is negative, the results are obtained by exploiting features alone; when N = 0, the results are obtained by exploiting raw signal alone; when N > 0 the results are obtained by combining raw signal with features
 - corresponding hyper-parameters are stored in res-hyp[N].txt, N range from -3 to 3.
