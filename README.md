@@ -7,24 +7,24 @@ RawData
 
 Data
 - contain all the data for GP hyper-parameter learning and prediction
-- two class of data
-1. raw signal
+- two class of data:
+  1. raw signal
 rawTrain.txt: contains N * (D+1) elements where N is the size of training data and D is input dimension (D = 240), first D column is the training input and last column is the training output
 rawTest.txt: contains T * (D+1) elements where T is the size of testing data, first D column is the testing input and last column is the test output
-2. features representing the raw signal
+  2. features representing the raw signal
 comfeat_train(#).txt: contains N * (D+1) elements, the input dimension is much smaller compared to raw signal
 comfeat_test(#).txt: contains N * (D+1) elements
 
 Python
 - Install GPy:
-1.install anaconda
-2.in command line:
-conda update scipy
-pip install gpy
-pip install --upgrade GPy
-3.this folder contains the GPy code for Gaussian process learning hypers and prediction
-4.type “python GPy-hyper.py directory” to run the program, directory contains the location where data is stored (in Data folder)
-5.type “python GPy-hyper.py directory sid” to run a particular dataset, sid range from -3 to 3.
+  1.install anaconda
+  2.in command line type:
+    conda update scipy
+    pip install gpy
+    pip install --upgrade GPy
+  3.this folder contains the GPy code for Gaussian process learning hypers and prediction
+  4.type “python GPy-hyper.py directory” to run the program, directory contains the location where data is stored (in Data folder)
+  5.type “python GPy-hyper.py directory sid” to run a particular dataset, sid range from -3 to 3.
 - prediction results and hypers are stored in the location specified by “directory”
 - prediction results are specified by res[N].txt where N range from -3 to 3. when N is negative, the results are obtained by exploiting features alone; when N = 0, the results are obtained by exploiting raw signal alone; when N > 0 the results are obtained by combining raw signal with features
 - corresponding hyper-parameters are stored in res-hyp[N].txt, N range from -3 to 3.
