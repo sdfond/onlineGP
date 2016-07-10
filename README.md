@@ -4,6 +4,13 @@ A complete GP regression model for predicting curb height in collaboration with 
 RawData
 - contain all the data in raw format
 - run RawExtract.py to obtain the desirable data format (refer to Data folder)
+- How to use RawExtact.py:
+  - type "python RawExtract.py timeid" where timeid is used to specify the data, for instance, timeid = 20160706 or 20160527
+  - after running RawExtract.py, you need to check whether the number of training and testing data is correct (verify it with the output of SVM result)
+- How to use multiRawExtract.py
+  - this is the version which will apply to multiple subfolders
+  - you need to change the subfolder name
+  - if the ignore-id exists (refer to train-NUS.fvA.txt, last row), you need to copy the id into removeList (inside the python code)
 
 Data
 - contain all the data for GP hyper-parameter learning and prediction
@@ -27,6 +34,7 @@ Python Folder
 - type “python GPy-hyper.py directory” to run the program (all 7 datasets combination), directory contains the location where data is stored (in Data folder)
 - prediction results and hypers are stored in the location specified by “directory”
 - prediction results are specified by res[N].txt where N range from -3 to 3. when N is negative, the results are obtained by exploiting features alone; when N = 0, the results are obtained by exploiting raw signal alone; when N > 0 the results are obtained by combining raw signal with features
+- in res[N].txt, the first two lines are the statistical results of classification. Each line contains 2 number [a b], where a is the number of testing samples in this class and b is the number of samples sucessfully classified.
 - corresponding hyper-parameters are stored in res-hyp[N].txt, N range from -3 to 3.
 - you can also type “python GPy-hyper.py directory sid” to run a particular dataset, sid range from -3 to 3. For instance, type "python GPy-hyper.py ../Data/5-10/ 0", it will only train the hyper-parameters of raw signal alone.
 - if the results are not so good, try to run GPy-hyper.py several times
