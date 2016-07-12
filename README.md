@@ -35,14 +35,15 @@ Install GPy:
 
 Python Folder
 - this folder contains the GPy code for Gaussian process learning hypers and prediction
-- type “python GPy-hyper.py directory” to run the program (all 7 datasets combination), directory contains the location where data is stored (in Data folder)
-- prediction results and hypers are stored in the location specified by “directory”
+- type “python GPy-hyper.py directory opti_method” to run the program (all 7 datasets combination) with optimization method set to opti_method (either bfgs or scg), directory contains the location where data is stored (in Data folder)
+- prediction results and hypers are stored in the FOLDER WHERE YOU RUN GPy-hyper.py
 - prediction results are specified by res[N].txt where N range from -3 to 3. when N is negative, the results are obtained by exploiting features alone; when N = 0, the results are obtained by exploiting raw signal alone; when N > 0 the results are obtained by combining raw signal with features
 - in res[N].txt, the first two lines are the statistical results of classification. Each line contains 2 number [a b], where a is the number of testing samples in this class and b is the number of samples sucessfully classified.
 - corresponding hyper-parameters are stored in res-hyp[N].txt, N range from -3 to 3.
-- you can also type “python GPy-hyper.py directory sid” to run a particular dataset, sid range from -3 to 3. For instance, type "python GPy-hyper.py ../Data/5-10/ 0", it will only train the hyper-parameters of raw signal alone.
-- if the results are not so good, try to run GPy-hyper.py several times
-- take note the the result will stored in the FOLDER WHERE YOU RUN GPy-hyper.py
+- you can also type “python GPy-hyper.py directory opti_method sid” to run a particular dataset, sid range from -3 to 3. For instance, type "python GPy-hyper.py ../Data/5-10/ bfgs 0", it will only train the hyper-parameters of raw signal alone with optimization method bfgs.
+- IMPORTANT: if the results are not as expected, you can:
+  - run GPy-hyper.py several times
+  - change the optimization method from scg to bfgs or vice versa
 
 Matlab
 - need to run createData.mat to generate ‘sonarData.mat’. In matlab command line, type createData(‘directory’) where ‘directory’ contains the location of data
