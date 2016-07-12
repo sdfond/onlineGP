@@ -9,6 +9,9 @@ for i in range(0,3):
     trainFile = open(trainName, 'r')
 
     fname = "processed.data.%s-NUS_%s.csv" % (sys.argv[1], fileName[i])
+    removeName = "%s.train.txt" % fileName[i]
+    removeList = open(removeName, 'r')
+    removeList = [a for a in removeList]
     rawTrain = open('rawTrain.txt', 'wa')
     rawTest = open('rawTest.txt', 'wa')
     rawFile = csv.reader(open(fname, 'rb'), delimiter = "\t")
@@ -16,6 +19,17 @@ for i in range(0,3):
     raw = [a for a in rawFile]
     raw.pop(0)
 
+    # extract ignore-id
+    removeList = removeList[-1]
+    ist = removeList.find("ignore-id")
+    ien = removeList.find("test_json_file")
+    removeList = removeList[ist:ien]
+    pat = re.compile("\[(.+)\]")
+    m = pat.search(removeList)
+    removeList = [a for a in m.group(1).split(',')]
+
+
+    # extract test-json-file
     spec = trainFile[-1]
     ist = spec.find("test_json_file")
     ien = spec.find("json-settings")
@@ -43,13 +57,16 @@ for i in range(0,3):
         res = re.sub('[\[,\]]', '', inner_str)
         # extract the joint ID
         tmp = rawL.split(']')[0]
-        tmpnum = [int(a) for a in tmp.split(',')]
+        tmpnum = [a for a in tmp.split(',')]
 
         total = sum(tname[i].rstrip('\n') in item for i in range(len(tname)))
         height = 0;
+        if set(tmpnum).intersection(removeList):
+            continue
 
+        id_list = [a[0] for a in raw]
         for j in range(0,3):
-            rid = tmpnum[j] - 1
+            rid = id_list.index(tmpnum[j].strip())
             tmp1 = raw[rid][1].split(',')
             tmp2 = raw[rid][2].split(',')
             height = raw[rid][5]
