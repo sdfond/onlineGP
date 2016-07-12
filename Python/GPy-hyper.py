@@ -37,8 +37,8 @@ vary = np.std(trainY, ddof=1)
 trainY = (trainY - meany) / vary
 
 # check whether sid is specified
-if len(sys.argv) == 3:
-    sid_range = [int(sys.argv[2])]
+if len(sys.argv) == 4:
+    sid_range = [int(sys.argv[3])]
 else:
     sid_range = range(-3,4)
 
@@ -82,10 +82,13 @@ for sid in sid_range:
     # 4 parameters: input data dimension, initial value of signal variance, initial value of length-scales, whether it's RBF-ARD kernel
     k = gp.kern.RBF(dim,10.0,avg,True)
 
-    # get a GPRegression model m, set the restart runs as 5
+    # get a GPRegression model m, set the restart runs as 3
     m = gp.models.GPRegression(trainX, trainY, k)
-    #m.optimize('bfgs')
-    m.optimize_restarts(3)
+    print 'optimization method: %s' % sys.argv[2]
+    if sys.argv[2] == 'bfgs':
+        m.optimize('bfgs')
+    else:
+        m.optimize_restarts(3)
 
 
     # obtain the prediction result on testX, res contains 4 arrays: predict mean, predict variance, lower and up 95% confident interval
@@ -100,25 +103,23 @@ for sid in sid_range:
 
     # compare with the real value, display the results
     meantest = meany
-    #meantest = 15
     s1 = np.where(testY > meantest)[0]
-    print "number of >15m samples: %d" % s1.shape
+    print "number of >%dm samples: %d" % (meantest, s1.size)
     s2 = np.where(ym[s1] > meantest)[0]
-    print "number of >15m correctly labeled: %d" % s2.shape
+    print "number of >%dm correctly labeled: %d" % (meantest, s2.size)
     resf.write("%d %d\n" % (len(s1), len(s2)))
     s1 = np.where(testY < meantest)[0]
-    print "number of <15m samples: %d" % s1.shape
+    print "number of <%dm samples: %d" % (meantest, s1.size)
     s2 = np.where(ym[s1] < meantest)[0]
-    print "number of <15m correctly labeled: %d" % s2.shape
+    print "number of <%dm correctly labeled: %d" % (meantest, s2.size)
     resf.write("%d %d\n" % (len(s1), len(s2)))
     for i in range(0,len(ym)):
         resf.write("%lf %lf\n" % (ym[i], ys[i]))
     resf.close()
 
+    # use kernel k to generate any covariance matrix
     k = m.kern
     C = k.K(testX,trainX)
-    print C[0,1]
-    print C[0,2]
 
     res = m.param_array.tolist()
     print m
