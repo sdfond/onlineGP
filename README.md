@@ -5,7 +5,7 @@ RawData
 - contain all the data in raw format
 - Raw data files include:
   - processed.data.[tid]-NUS_fv[fid].csv, where tid is the time signature and fid is selected from ['A', 'B', 'C'].
-  - train-NUS.fv[fid].txt, this file contains the SVM results
+  - fv[fid].train.txt, this file contains the SVM results. It also contains test_json_file and ignore-id if applicable.
   - train-NUS.fv[fid].txt, this file specifies how the IDs are combined (each ID represents a sonar profile in csv file)
 - run RawExtract.py to obtain the desirable data format (refer to Data folder)
 - How to use RawExtact.py:
