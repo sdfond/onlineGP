@@ -1,3 +1,5 @@
+# Gpy-hyper.py takes in 2 input parameters: working directory and data indication.
+# The second parameter is optional, if not specified, will run all the possible data combinations.
 import GPy as gp
 import numpy as np
 import sys
@@ -37,8 +39,8 @@ vary = np.std(trainY, ddof=1)
 trainY = (trainY - meany) / vary
 
 # check whether sid is specified
-if len(sys.argv) == 4:
-    sid_range = [int(sys.argv[3])]
+if len(sys.argv) == 3:
+    sid_range = [int(sys.argv[2])]
 else:
     sid_range = range(-3,4)
 
@@ -73,26 +75,64 @@ for sid in sid_range:
     np.savetxt(savename, gpTest)
 
 
-    # setting up a initial guess of hyper-parameters
-    avg1 = [2 / (np.sqrt(np.mean(np.fabs(np.diff(trainX[:,i])))))**2 + np.random.normal(0,5) for i in range(trainX.shape[1])]
-    avg2 = [2 / (0.1*np.sqrt(np.mean(np.fabs(np.diff(trainX[:,i])))))**2 + np.random.normal(0,5) for i in range(trainX.shape[1])]
-    avg = np.maximum(avg1,avg2)
+    '''
+    Valid optimizers are:
+    - 'scg': scaled conjugate gradient method, recommended for stability. See also GPy.inference.optimization.scg
+    - 'fmin_tnc': truncated Newton method (see scipy.optimize.fmin_tnc)
+    - 'simplex': the Nelder-Mead simplex method (see scipy.optimize.fmin),
+    - 'lbfgsb': the l-bfgs-b method (see scipy.optimize.fmin_l_bfgs_b),
+    - 'lbfgs': the bfgs method (see scipy.optimize.fmin_bfgs),
+    - 'sgd': stochastic gradient decsent (see scipy.optimize.sgd). For experts only!
+    '''
+    '''
+    Tuning hypers: choose the minimum objective function to fit in the training data
+    Some times multiple random initial seeds yield good results, so try with 20 initial seeds
+    '''
+    minObj = 1000
+    for i in range(0,20):
+        # setting up a initial guess of hyper-parameters
+        avg1 = [2 / (np.sqrt(np.mean(np.fabs(np.diff(trainX[:,i])))))**2 + np.random.normal(0,10) for i in range(trainX.shape[1])]
+        avg2 = [2 / (0.1*np.sqrt(np.mean(np.fabs(np.diff(trainX[:,i])))))**2 + np.random.normal(0,10) for i in range(trainX.shape[1])]
+        avg = np.maximum(avg1,avg2)
 
-    # define a kernel function (RBF ard kernel)
-    # 4 parameters: input data dimension, initial value of signal variance, initial value of length-scales, whether it's RBF-ARD kernel
-    k = gp.kern.RBF(dim,10.0,avg,True)
+        # define a kernel function (RBF ard kernel)
+        # 4 parameters: input data dimension, initial value of signal variance, initial value of length-scales, whether it's RBF-ARD kernel
+        k = gp.kern.RBF(dim,np.random.normal(8,5),avg,True)
 
-    # get a GPRegression model m, set the restart runs as 3
-    m = gp.models.GPRegression(trainX, trainY, k)
-    print 'optimization method: %s' % sys.argv[2]
-    if sys.argv[2] == 'bfgs':
-        m.optimize('bfgs')
-    else:
-        m.optimize_restarts(3)
+        # get a GPRegression model m, set the restart runs as 3
+        m = gp.models.GPRegression(trainX, trainY, k)
+        # only scg is used as it is the recommended for being stable
+        # to try with other methods, comment off the following line and erase m.optimize_restarts, refer to above list for other options
+        #m.optimize('scg')
+        m.optimize_restarts(1);
+        if m.objective_function() < minObj:
+            minObj = m.objective_function()
+            model = m
+    '''
+    sometimes the built-in optimize_restarts function works better, also try with 10 restarts.
+    The final results will be a combination of multiple random seeds and multiple restarts.
+    '''
+    for i in range(0,5):
+        # setting up a initial guess of hyper-parameters
+        avg1 = [2 / (np.sqrt(np.mean(np.fabs(np.diff(trainX[:,i])))))**2 + np.random.normal(0,5) for i in range(trainX.shape[1])]
+        avg2 = [2 / (0.1*np.sqrt(np.mean(np.fabs(np.diff(trainX[:,i])))))**2 + np.random.normal(0,5) for i in range(trainX.shape[1])]
+        avg = np.maximum(avg1,avg2)
+
+        # define a kernel function (RBF ard kernel)
+        # 4 parameters: input data dimension, initial value of signal variance, initial value of length-scales, whether it's RBF-ARD kernel
+        k = gp.kern.RBF(dim,np.random.normal(8,5),avg,True)
+
+        # get a GPRegression model m, set the restart runs as 3
+        m = gp.models.GPRegression(trainX, trainY, k)
+        m.optimize_restarts();
+        if m.objective_function() < minObj:
+            minObj = m.objective_function()
+            model = m
+
 
 
     # obtain the prediction result on testX, res contains 4 arrays: predict mean, predict variance, lower and up 95% confident interval
-    res = m.predict(testX)
+    res = model.predict(testX)
     # res[0] contains predict mean
     ym = res[0] * vary + meany
     # res[1] contains predict variance
