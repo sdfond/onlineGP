@@ -41,7 +41,9 @@ Python Folder
 - in res[N].txt, the first two lines are the statistical results of classification. Each line contains 2 number [a b], where a is the number of testing samples in this class and b is the number of samples sucessfully classified.
 - corresponding hyper-parameters are stored in res-hyp[N].txt, N range from -3 to 3.
 - IMPORTANT: if the results for particular res[N].txt are not as expected, you can:
-  - Fine-tune it with “python GPy-hyper.py directory N" to get the particular result of "res[N].txt". For instance, type "python GPy-hyper.py ../Data/5-10/ 0", it will only train the hyper-parameters of raw signal alone. Run it multiple times until the result looks normal.
+'''
+  - Fine-tune it with “python GPy-hyper.py directory N" to get the particular result of "res[N].txt". For instance, type "python GPy-hyper.py ../Data/5-10/ 0", it will only train the hyper-parameters of raw signal alone. Run it multiple times until the result looks normal. This method is also used when you encounter a failure during hyper-parameter learning.
+'''
   - Change the optimization method. Note that other optimization methods may not be stable (e.g., you can get completely different results in each run).
 
 Matlab
