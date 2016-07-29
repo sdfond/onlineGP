@@ -49,6 +49,8 @@ Python Folder
 For instance, type "python GPy-hyper.py ../Data/5-10/ 0", it will only train the hyper-parameters of raw signal alone. Run it multiple times until the result looks normal. This method is also used when you encounter a failure during hyper-parameter learning.
 Alternatively, you can change the optimization method. Note that other optimization methods may not be stable (e.g., you can get completely different results in each run).
 
+GPy-model.py is used to obtain the prediction result given a set of parameters (instored in param[N].txt). GPy-hyper.py will automatically generate a param[N].txt file. The usage of GPy-model.py is the same as GPy-hyper.py.
+
 Matlab
 - need to run createData.mat to generate ‘sonarData.mat’. In matlab command line, type createData(‘directory’) where ‘directory’ contains the location of data
 - run rawTrain.m to obtain the hyper-parameters (require ‘sonarData.mat’). In matlab command line, type rawTrain(N) where N range from -3 to 3.
