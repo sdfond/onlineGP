@@ -157,16 +157,17 @@ for sid in sid_range:
         resf.write("%lf %lf\n" % (ym[i], ys[i]))
     resf.close()
 
-    # use kernel k to generate any covariance matrix
-    k = m.kern
-    C = k.K(testX,trainX)
+    # obtain all the hyper-parameters of this model
+    res = model.param_array.tolist()
+    # save this param-list for restore the model without learning hyper again
+    param_file = 'param%d.txt' % sid
+    np.savetxt(param_file, res)
 
-    res = m.param_array.tolist()
-    print m
-
+    # output the hyper parameters for GP prediction C code, note that C code takes in the log form of parameters
     hypname = "res-hyp%d.txt" % sid
     hypf = open(hypname, 'w+')
 
+    # for signal and noise, here it is signal^2 and noise^2, we need to obtain log(signal) and log(noise), therefore log(signal) = 0.5 * log(signal^2)
     signal = res[0]
     signal = 0.5 * np.log(signal)
     noise = res[-1]
