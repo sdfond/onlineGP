@@ -66,3 +66,9 @@ Predict
   - Line1: signal, noise, mean of train output, variance of train output, input_dim, input_num, output_num
   - Follow with input_dim lines: each line contains a length_scale
 - all the hypers are in log form
+
+onlineGP
+- a sparse GP method: increase the efficiency (from full GP O(n^3) to O(n * m^2) but drop the predict accuracy), where n is the data size, m is the size of support set
+- all the formats are very similar to full GP (refer to Predict folder)
+- the mathematical detail, performance guarantee, detailed discussion can refer to: http://www.comp.nus.edu.sg/~lowkh/pubs/uai2012.pdf and http://www.comp.nus.edu.sg/~lowkh/pubs/aaai2014.pdf
+- dom folder contains the data and hypers, lib folder contains the core code for prediction, pitc_test contains a test case for using online GP
