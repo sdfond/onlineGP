@@ -72,3 +72,4 @@ onlineGP
 - all the formats are very similar to full GP (refer to Predict folder)
 - the mathematical detail, performance guarantee, detailed discussion can refer to: http://www.comp.nus.edu.sg/~lowkh/pubs/uai2012.pdf and http://www.comp.nus.edu.sg/~lowkh/pubs/aaai2014.pdf
 - dom folder contains the data and hypers, lib folder contains the core code for prediction, pitc_test contains a test case for using online GP
+- must train the hyper first before prediction. Refer to Python for Matlab folder for hyper-training part.
