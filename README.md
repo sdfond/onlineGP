@@ -1,5 +1,5 @@
-# PanasonicGP
-A complete GP regression model for predicting curb height in collaboration with Panasonic
+# OnlineGP
+A complete GP offline/online regression model for predicting curb height.
 
 RawData
 - contain all the data in raw format
